@@ -27,6 +27,8 @@ spec:
         env:
         - name: HTTPPORT
           value: {{ .Values.consumer.httpport | quote }}
+         - name: CPU_LOOPCNT
+          value: {{ .Values.consumer.loopcnt | quote }}
 ---
 apiVersion: v1
 kind: Service

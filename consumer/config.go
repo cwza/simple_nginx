@@ -9,6 +9,9 @@ import (
 
 type Config struct {
 	HttpPort string `mapstructure:"httpport"`
+	Cpu      struct {
+		LoopCnt int `mapstructure:"loopcnt"`
+	} `mapstructure:"cpu"`
 }
 
 func initConfig(filepath string) (Config, error) {
@@ -28,6 +31,10 @@ func initConfig(filepath string) (Config, error) {
 
 	if config.HttpPort == "" {
 		return Config{}, fmt.Errorf("config.HttpPort is invalid")
+	}
+
+	if config.Cpu.LoopCnt < 0 {
+		return Config{}, fmt.Errorf("config.Cpu.LoopCnt is invalid")
 	}
 
 	return config, nil

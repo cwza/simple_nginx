@@ -9,3 +9,5 @@ producer:
 
 consumer:
   httpport: 30080
+  cpu:
+    loopcnt: 10000

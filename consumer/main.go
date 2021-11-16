@@ -21,6 +21,7 @@ func main() {
 	}
 	log.Printf("config: %+v\n", config)
 
+	http.HandleFunc("/health", healthCheck)
 	http.HandleFunc("/cpu", createCpuFunc(config.Cpu.LoopCnt))
 
 	log.Fatal(http.ListenAndServe(":"+config.HttpPort, nil))

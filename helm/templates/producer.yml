@@ -19,11 +19,11 @@ spec:
         command: ["/producer"]
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "250m"
+            memory: "1G"
+            cpu: "2000m"
           limits:
-            memory: "512Mi"
-            cpu: "500m"
+            memory: "1G"
+            cpu: "2000m"
         env:
         - name: CONSUMERURL
           value: {{ .Values.producer.consumerurl }}

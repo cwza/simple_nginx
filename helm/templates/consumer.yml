@@ -17,18 +17,24 @@ spec:
         image: cwza/simple_nginx:latest
         imagePullPolicy: Always
         command: ["/consumer"]
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.consumer.httpport }}
+          initialDelaySeconds: 3
+          periodSeconds: 3
         resources:
           requests:
-            memory: "64Mi"
+            memory: "128Mi"
             cpu: "50m"
           limits:
             memory: "128Mi"
-            cpu: "100m"
+            cpu: "50m"
         env:
         - name: HTTPPORT
           value: {{ .Values.consumer.httpport | quote }}
-         - name: CPU_LOOPCNT
-          value: {{ .Values.consumer.loopcnt | quote }}
+        - name: CPU_LOOPCNT
+          value: {{ .Values.consumer.cpu.loopcnt | quote }}
 ---
 apiVersion: v1
 kind: Service

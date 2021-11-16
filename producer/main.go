@@ -26,7 +26,7 @@ func send(url string) (string, error) {
 
 	client := http.Client{
 		Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}},
-		Timeout:   30 * time.Second,
+		Timeout:   1 * time.Millisecond,
 	}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -51,10 +51,10 @@ func sends(url string, msgCnt int, pool chan int) {
 	for i := 0; i < msgCnt; i++ {
 		<-pool
 		go func() {
-			_, err := send(url)
-			if err != nil {
-				log.Printf("failed to send msg, %s", err)
-			}
+			send(url)
+			// if err != nil {
+			// 	log.Printf("failed to send msg, %s", err)
+			// }
 			pool <- 1
 		}()
 	}

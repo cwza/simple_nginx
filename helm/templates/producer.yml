@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-nginx-producer
+spec:
+  selector:
+    matchLabels:
+      app: simple-nginx-producer
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: simple-nginx-producer
+    spec:
+      containers:
+      - name: simple-nginx-producer
+        image: cwza/simple_nginx:latest
+        imagePullPolicy: Always
+        command: ["/producer"]
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        env:
+        - name: CONSUMERURL
+          value: {{ .Values.producer.consumerurl }}
+        - name: RATES
+          value: {{ .Values.producer.rates }}
+        - name: CNTS
+          value: {{ .Values.producer.cnts }}

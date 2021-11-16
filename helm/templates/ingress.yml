@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: {{ .Values.consumerhost }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: simple-nginx-consumer
+          servicePort: {{ .Values.conumser.httpport }}

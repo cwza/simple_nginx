@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-nginx-consumer
+spec:
+  selector:
+    matchLabels:
+      app: simple-nginx-consumer
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: simple-nginx-consumer
+    spec:
+      containers:
+      - name: simple-nginx-consumer
+        image: cwza/simple_nginx:latest
+        imagePullPolicy: Always
+        command: ["/consumer"]
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        env:
+        - name: HTTPPORT
+          value: {{ .Values.consumer.httpport }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-nginx-consumer
+spec:
+  selector:
+    app: simple-nginx-consumer
+  ports:
+    - protocol: TCP
+      name: simple-nginx-consumer
+      port: {{ .Values.consumer.httpport }}
+      targetPort: {{ .Values.consumer.httpport }}

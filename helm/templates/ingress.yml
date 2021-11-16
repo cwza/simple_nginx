@@ -1,7 +1,7 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-nginx
+  name: simple-nginx-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
@@ -10,6 +10,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: simple-nginx-consumer
-          servicePort: {{ .Values.conumser.httpport }}
+          service:
+            name: simple-nginx-consumer
+            port: 
+              number: {{ .Values.consumer.httpport }}

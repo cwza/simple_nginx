@@ -2,6 +2,8 @@ consumerhost: "ingress-nginx-controller.ingress-nginx"
 
 producer:
   consumerurl: "http://ingress-nginx-controller.ingress-nginx:80/simple"
+  timeout: 1
+  workercount: 10
   rates: "6000,12000,18000,24000,30000,24000,18000,12000,6000,0"
   cnts: "1,1,1,1,1,1,1,1,1,1"
 

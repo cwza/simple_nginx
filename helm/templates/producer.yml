@@ -19,14 +19,18 @@ spec:
         command: ["/producer"]
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "50m"
+            memory: "256Mi"
+            cpu: "250m"
           limits:
-            memory: "128Mi"
-            cpu: "100m"
+            memory: "512Mi"
+            cpu: "500m"
         env:
         - name: CONSUMERURL
           value: {{ .Values.producer.consumerurl }}
+        - name: TIMEOUT
+          value: {{ .Values.producer.timeout | quote }}
+        - name: WORKERCNT
+          value: {{ .Values.producer.workercnt | quote }}
         - name: RATES
           value: {{ .Values.producer.rates }}
         - name: CNTS

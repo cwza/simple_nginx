@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"runtime"
 	"time"
 )
 
@@ -18,7 +17,7 @@ func init() {
 	flag.StringVar(&configPath, "cfgpath", "./producer.toml", "config file path")
 }
 
-func send(url string) (string, error) {
+func send(url string, timeout int) (string, error) {
 	req, err := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
 	if err != nil {
 		return "", fmt.Errorf("failed to create http request, %s", err)
@@ -26,7 +25,7 @@ func send(url string) (string, error) {
 
 	client := http.Client{
 		Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}},
-		Timeout:   1 * time.Millisecond,
+		Timeout:   time.Duration(timeout) * time.Second,
 	}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -47,27 +46,27 @@ func send(url string) (string, error) {
 	return string(respBody), nil
 }
 
-func sends(url string, msgCnt int, pool chan int) {
+func sends(url string, timeout int, msgCnt int, pool chan int) {
 	for i := 0; i < msgCnt; i++ {
 		<-pool
 		go func() {
-			send(url)
-			// if err != nil {
-			// 	log.Printf("failed to send msg, %s", err)
-			// }
+			_, err := send(url, timeout)
+			if err != nil {
+				log.Printf("failed to send msg, %s", err)
+			}
 			pool <- 1
 		}()
 	}
 }
 
-func run(url string, workerCnt int, genSecRateFunc func() int) {
+func run(url string, timeout int, workerCnt int, genSecRateFunc func() int) {
 	pool := make(chan int, workerCnt)
 	for i := 0; i < workerCnt; i++ {
 		pool <- 1
 	}
 	for range time.Tick(time.Second) {
 		msgCnt := genSecRateFunc()
-		sends(url, msgCnt, pool)
+		sends(url, timeout, msgCnt, pool)
 		log.Printf("send %d msgs\n", msgCnt)
 	}
 }
@@ -82,5 +81,5 @@ func main() {
 	log.Printf("config: %+v\n", config)
 
 	genSecRateFunc := createGenSecRateFunc(createGenMinRateFunc(config.Rates, config.Cnts))
-	run(config.ConsumerUrl, runtime.NumCPU(), genSecRateFunc)
+	run(config.ConsumerUrl, config.Timeout, config.WorkerCnt, genSecRateFunc)
 }

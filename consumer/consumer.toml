@@ -1,4 +1,5 @@
 httpport = "30080"
+shutdowntimeout = 30
 
 [cpu]
 loopcnt = 10000

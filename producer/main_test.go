@@ -41,8 +41,8 @@ func TestCreateGenMinRateFunc(t *testing.T) {
 func TestCreateGenSecRateFunc2(t *testing.T) {
 	// rates := []int{6000, 12000, 18000, 24000, 30000, 24000, 18000, 12000, 6000, 0}
 	// cnts := []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	rates := []int{10, 20}
-	cnts := []int{5, 2}
+	rates := []int{100, 15000}
+	cnts := []int{10, 10}
 	genMinRateFunc := createGenMinRateFunc(rates, cnts)
 
 	genSecRateFunc := createGenSecRateFunc(genMinRateFunc)
